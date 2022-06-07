@@ -2,9 +2,10 @@ from solcx import compile_standard, install_solc
 import json
 from web3 import Web3
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+# from dotenv import load_dotenv
+
+# load_dotenv()
 
 with open("./SimpleStorage.sol", "r") as file:
     simple_storage_file = file.read()
@@ -36,20 +37,21 @@ bytecode = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["evm"
 abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
 
 # connecting to ganache
-# w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
-# chain_id = 1337
-# my_address = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:8545"))
+chain_id = 1337
+my_address = "0x2A98807A99567b1e588961327F384793b449c195"
+private_key = "0xf52157e7dcc5855cb19b7084dfa826d6230bb80359a5d4ebf2594a329238442e"
 
 # connecting to rinkeby
-w3 = Web3(
-    Web3.HTTPProvider("https://rinkeby.infura.io/v3/ea1c309ed48e4ff2a6bf73491076d950")
-)
-chain_id = 4
-my_address = "0x32e590eE65137DB6c262d66ADaE445BfF5f5F087"
+# w3 = Web3(
+#     Web3.HTTPProvider("https://rinkeby.infura.io/v3/ea1c309ed48e4ff2a6bf73491076d950")
+# )
+# chain_id = 4
+# my_address = "0x32e590eE65137DB6c262d66ADaE445BfF5f5F087"
 
-private_key = os.getenv("PRIVATE_KEY")
+# private_key = os.getenv("PRIVATE_KEY")
 
-# Create the contract in Pythona
+# Create the contract in Python
 SimpleStorage = w3.eth.contract(abi=abi, bytecode=bytecode)
 
 # Get the latest transaction
