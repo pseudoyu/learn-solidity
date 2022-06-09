@@ -23,7 +23,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 
 const RINKEBY_RPC_URL =
-    process.env.RINKEBY_RPC_URL || "httpsL//eth-rinkeby/example"
+    process.env.RINKEBY_RPC_URL || "https://eth-rinkeby/example"
 const RINKEBY_PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY || "0xkey"
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "key"
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key"
