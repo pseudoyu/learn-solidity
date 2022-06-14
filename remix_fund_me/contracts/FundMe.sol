@@ -3,26 +3,40 @@ pragma solidity ^0.8.8;
 
 import "./PriceConverter.sol";
 
+error NotOwner();
+error NotEnoughFunds();
+error WithdralFailed();
+
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public minimumUsd;
+    uint256 public constant MINIMUM_USD = 50 * 1e18;
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
-    address public owner;
+    address public immutable owner;
 
     constructor() {
-        minimumUsd = 50 * 1e18;
         owner = msg.sender;
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
+        // require(msg.sender == owner, "Not owner");
+        if (msg.owner != owner) {
+            revert NotOwner();
+        }
         _;
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate() > minimumUsd, "Not Enough Money");
+        // require(
+        //     msg.value.getConversionRate() > MINIMUM_USD,
+        //     "Not Enough Money"
+        // );
+
+        if (msg.value.getConversionRate() < MINIMUM_USD) {
+            revert NotEnoughFunds();
+        }
+
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] = msg.value;
     }
@@ -43,12 +57,26 @@ contract FundMe {
 
         // send
         bool sendSuccess = payable(msg.sender).send(address(this).balance);
-        require(sendSuccess, "Withdraw Failed");
+        // require(sendSuccess, "Withdraw Failed");
+        if (!callSuccess) {
+            revert WithdralFailed();
+        }
 
         // call
         (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
-        require(callSuccess, "Withdraw Failed");
+        // require(callSuccess, "Withdraw Failed");
+        if (!callSuccess) {
+            revert WithdralFailed();
+        }
+    }
+
+    receive() external payable {
+        fund();
+    }
+
+    fallback() external payable {
+        fund();
     }
 }
