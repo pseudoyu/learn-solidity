@@ -21,7 +21,7 @@ contract FundMe {
 
     modifier onlyOwner() {
         // require(msg.sender == owner, "Not owner");
-        if (msg.owner != owner) {
+        if (msg.sender != owner) {
             revert NotOwner();
         }
         _;
@@ -58,7 +58,7 @@ contract FundMe {
         // send
         bool sendSuccess = payable(msg.sender).send(address(this).balance);
         // require(sendSuccess, "Withdraw Failed");
-        if (!callSuccess) {
+        if (!sendSuccess) {
             revert WithdralFailed();
         }
 
