@@ -5,6 +5,7 @@ pragma solidity ^0.8.8;
 
 // 引入合约/库
 import "./PriceConverter.sol";
+import "hardhat/console.sol";
 
 // 错误码
 error FundMe__NotOwner();
@@ -24,7 +25,7 @@ contract FundMe {
     using PriceConverter for uint256;
 
     // 状态变量
-    uint256 public constant MINIMUM_USD = 50 * 1e18;
+    uint256 public constant MINIMUM_USD = 50 * 1e10;
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
     address public immutable owner;
@@ -78,9 +79,11 @@ contract FundMe {
         if (msg.value.getConversionRate(priceFeed) < MINIMUM_USD) {
             revert FundMe__NotEnoughFunds();
         }
+        // console.log(">>> MINIMUM_USD:", MINIMUM_USD);
+        // console.log(">>> Funding:", msg.value.getConversionRate(priceFeed));
 
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = msg.value;
+        addressToAmountFunded[msg.sender] += msg.value;
     }
 
     function withdraw() public onlyOwner {
