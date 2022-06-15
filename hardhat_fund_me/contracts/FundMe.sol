@@ -68,8 +68,6 @@ contract FundMe {
     /**
      *   @notice This fuction is used to receive funds from participants
      *   @dev This implements price feeds as our library
-     *   @param
-     *   @return
      */
     function fund() public payable {
         // require(
