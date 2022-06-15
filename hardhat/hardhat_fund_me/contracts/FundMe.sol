@@ -85,7 +85,7 @@ contract FundMe {
         s_addressToAmountFunded[msg.sender] += msg.value;
     }
 
-    function withdraw() public onlyOwner {
+    function withdraw() public payable onlyOwner {
         for (
             uint256 funderIndex = 0;
             funderIndex < s_funders.length;
@@ -107,10 +107,27 @@ contract FundMe {
         }
 
         // call
-        (bool callSuccess, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
+        (bool callSuccess, ) = i_owner.call{value: address(this).balance}("");
         // require(callSuccess, "Withdraw Failed");
+        if (!callSuccess) {
+            revert FundMe__WithdralFailed();
+        }
+    }
+
+    function cheaperWithdraw() public payable onlyOwner {
+        address[] memory funders = s_funders;
+        for (
+            uint256 funderIndex = 0;
+            funderIndex < funders.length;
+            funderIndex++
+        ) {
+            address funder = funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
+        }
+        s_funders = new address[](0);
+
+        (bool callSuccess, ) = i_owner.call{value: address(this).balance}("");
+
         if (!callSuccess) {
             revert FundMe__WithdralFailed();
         }
