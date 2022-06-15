@@ -15,15 +15,16 @@
 
 // const helperConfig = require("./helper-hardhat-config")
 // networkConfig = helperConfig.networkConfig
-const { networkConfig, developmentChain } = require("../helper-hardhat-config")
 const { network } = require("hardhat")
+const { networkConfig, developmentChains } = require("../helper-hardhat-config")
+const { verify } = require("../utils/verify")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, get, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
     let ethUsdPriceFeedAddress
-    if (developmentChain.includes(network.name)) {
+    if (developmentChains.includes(network.name)) {
         // 本地测试时我们可以使用 mock 数据
         const ethUsdAggregator = await get("MockV3Aggregator")
         ethUsdPriceFeedAddress = ethUsdAggregator.address
@@ -31,15 +32,20 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         // 非本地环境读取 helper 变量值
         ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
     }
-
     const fundMe = await deploy("FundMe", {
         from: deployer,
-        args: [
-            /* price feed addresses */
-            ethUsdPriceFeedAddress,
-        ],
+        args: [ethUsdPriceFeedAddress],
         log: true,
+        waitConfirmations: network.config.blockConfirmation || 1,
     })
+
+    // 在 Etherscan 上验证合约
+    if (
+        !developmentChains.includes(network.name) &&
+        process.env.ETHERSCAN_API_KEY
+    ) {
+        await verify(fundMe.address, [ethUsdPriceFeedAddress])
+    }
 }
 
 module.exports.tags = ["all", "fundme"]

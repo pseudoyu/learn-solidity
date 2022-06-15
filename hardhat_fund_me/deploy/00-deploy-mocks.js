@@ -1,6 +1,6 @@
 const { network } = require("hardhat")
 const {
-    developmentChain,
+    developmentChains,
     DECIMALS,
     INITIAL_ANSWER,
 } = require("../helper-hardhat-config")
@@ -11,7 +11,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const chainId = network.config.chainId
 
     // 本地测试时我们需要部署 mock 合约
-    if (developmentChain.includes(network.name)) {
+    if (developmentChains.includes(network.name)) {
         log("Local development environment detected, Deploying Mocks...")
         await deploy("MockV3Aggregator", {
             contract: "MockV3Aggregator",
