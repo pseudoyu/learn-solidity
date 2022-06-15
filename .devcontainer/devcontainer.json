@@ -23,7 +23,8 @@
 				"esbenp.prettier-vscode",
 				"2gua.rainbow-brackets",
 				"NomicFoundation.hardhat-solidity",
-				"WakaTime.vscode-wakatime"
+				"WakaTime.vscode-wakatime",
+				"ritwickdey.LiveServer"
 			]
 		}
 	},
