@@ -25,11 +25,11 @@ contract FundMe {
     using PriceConverter for uint256;
 
     // 状态变量
-    mapping(address => uint256) public s_addressToAmountFunded;
-    address[] public s_funders;
-    address public immutable i_owner;
     uint256 public constant MINIMUM_USD = 50 * 1e10;
-    AggregatorV3Interface public s_priceFeed;
+    mapping(address => uint256) private s_addressToAmountFunded;
+    address[] private s_funders;
+    address private immutable i_owner;
+    AggregatorV3Interface private s_priceFeed;
 
     // 事件
 
@@ -131,5 +131,25 @@ contract FundMe {
         if (!callSuccess) {
             revert FundMe__WithdralFailed();
         }
+    }
+
+    function getOwner() public view returns (address) {
+        return i_owner;
+    }
+
+    function getFunder(uint256 index) public view returns (address) {
+        return s_funders[index];
+    }
+
+    function getAddressToAmountFunded(address funder)
+        public
+        view
+        returns (uint256)
+    {
+        return s_addressToAmountFunded[funder];
+    }
+
+    function getPriceFeed() public view returns (AggregatorV3Interface) {
+        return s_priceFeed;
     }
 }

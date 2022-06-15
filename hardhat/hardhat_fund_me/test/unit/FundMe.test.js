@@ -21,7 +21,7 @@ describe("FundMe", async () => {
     // 测试构造函数
     describe("constructor", async () => {
         it("Should set the aggregator addresses correctly", async () => {
-            const response = await fundMe.s_priceFeed()
+            const response = await fundMe.getPriceFeed()
             assert.equal(response, MockV3Aggregator.address)
         })
     })
@@ -36,13 +36,13 @@ describe("FundMe", async () => {
 
         it("Updates the amount funded data structure", async () => {
             await fundMe.fund({ value: sendValue })
-            const response = await fundMe.s_addressToAmountFunded(deployer)
+            const response = await fundMe.getAddressToAmountFunded(deployer)
             assert.equal(response.toString(), sendValue.toString())
         })
 
         it("Adds funders to array of funders", async () => {
             await fundMe.fund({ value: sendValue })
-            const response = await fundMe.s_funders(0)
+            const response = await fundMe.getFunder(0)
             assert.equal(response, deployer)
         })
     })
@@ -118,11 +118,11 @@ describe("FundMe", async () => {
                 endingDeployerBalance.add(gasCost).toString()
             )
 
-            await expect(fundMe.s_funders(0)).to.be.reverted
+            await expect(fundMe.getFunder(0)).to.be.reverted
 
             for (i = 1; i < 7; i++) {
                 assert.equal(
-                    await fundMe.s_addressToAmountFunded(accounts[i].address),
+                    await fundMe.getAddressToAmountFunded(accounts[i].address),
                     0
                 )
             }
@@ -215,11 +215,11 @@ describe("FundMe", async () => {
                 endingDeployerBalance.add(gasCost).toString()
             )
 
-            await expect(fundMe.s_funders(0)).to.be.reverted
+            await expect(fundMe.getFunder(0)).to.be.reverted
 
             for (i = 1; i < 7; i++) {
                 assert.equal(
-                    await fundMe.s_addressToAmountFunded(accounts[i].address),
+                    await fundMe.getAddressToAmountFunded(accounts[i].address),
                     0
                 )
             }
