@@ -30,7 +30,7 @@ describe("FundMe", async () => {
     describe("fund", async () => {
         it("Fails if you don't send enough ETH", async () => {
             await expect(fundMe.fund()).to.be.revertedWith(
-                "FundMe__NotEnoughFunds()"
+                "FundMe__NotEnoughFunds"
             )
         })
 
@@ -138,7 +138,9 @@ describe("FundMe", async () => {
             await attackerConnectedContract.fund({ value: sendValue })
 
             // Assert
-            await expect(attackerConnectedContract.withdraw()).to.be.reverted
+            await expect(
+                attackerConnectedContract.withdraw()
+            ).to.be.revertedWith("FundMe__NotOwner")
         })
     })
 })
