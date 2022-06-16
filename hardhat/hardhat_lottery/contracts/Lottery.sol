@@ -16,9 +16,10 @@ error Lottery__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint2
 /**
  * @title Lottery Smart Contract
  * @author Yu ZHANG
- * @dev 1. Enter(Pay at least 0.1 ETH)
- * @dev 2. Pick random winner - Chainlink Oracle
- * @dev 3. Automatically run - Chainlink Keeper
+ * @dev This implements Chainlink VRF and Keepers
+ * 1. Enter(Pay at least 0.1 ETH)
+ * 2. Pick random winner - Chainlink Oracle
+ * 3. Automatically run - Chainlink Keeper
  */
 contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     // 类型定义
@@ -57,6 +58,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         _;
     }
 
+    // 函数
     // 构造函数
     constructor(
         address vrfCoordinatorV2,
@@ -177,5 +179,25 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     function getRecentWinner() public view returns (address) {
         return s_recentWinner;
+    }
+
+    function getLotteryState() public view returns (LotteryState) {
+        return s_lotteryState;
+    }
+
+    function getNumWords() public pure returns (uint32) {
+        return NUM_WORDS;
+    }
+
+    function getNumberOfPlayers() public view returns (uint256) {
+        return s_players.length;
+    }
+
+    function getLatestTimeStamp() public view returns (uint256) {
+        return s_lastTimeStamp;
+    }
+
+    function getRequestConfirmations() public pure returns (uint16) {
+        return REQUEST_CONFIRMATIONS;
     }
 }
