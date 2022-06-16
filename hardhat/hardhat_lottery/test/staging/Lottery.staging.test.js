@@ -12,17 +12,19 @@ developmentChains.includes(network.name)
               lotteryEntranceFee = await lottery.getEntranceFee()
           })
 
-          describe("Lottery Staging Test", () => {
+          describe("All Process Test", () => {
               it("It will be tested on testnet and chainlink network", async () => {
+                  console.log("Setting up test...")
                   // Enter the lottery
                   const accounts = await ethers.getSigners()
                   const lotteryEntranceFee = await lottery.getEntranceFee()
                   const startingTimeStamp = await lottery.getLatestTimeStamp()
 
                   // Set up the listener
+                  console.log("Setting up Listener...")
                   await new Promise(async (resolve, reject) => {
                       lottery.once("WinnerPicked", async () => {
-                          console.log("WinnerPicked")
+                          console.log("WinnerPicked event fired!")
                           try {
                               const recentWinner = await lottery.getRecentWinner()
                               const lotteryState = await lottery.getLotteryState()
@@ -43,7 +45,9 @@ developmentChains.includes(network.name)
                               reject(error)
                           }
                       })
+                      console.log("Entering Raffle...")
                       await lottery.enterLottery({ value: lotteryEntranceFee })
+                      console.log("Ok, time to wait...")
                       const winnerStartingBalance = await accounts[0].getBalance()
                   })
               })
