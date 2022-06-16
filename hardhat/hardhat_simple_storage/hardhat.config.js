@@ -31,7 +31,7 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key"
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
-        locakhost: {
+        localhost: {
             url: "http://localhost:8545",
             chainId: 31337,
         },
