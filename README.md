@@ -1,2 +1,3 @@
-# Learn Solidity
-Solidity, Blockchain, and Smart Contract Course
+# learn-solidity
+
+Notes and demo code related to solidity
