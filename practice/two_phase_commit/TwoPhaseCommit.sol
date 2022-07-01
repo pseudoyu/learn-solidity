@@ -12,11 +12,11 @@ error TwoPhaseCommit__DataIsInconsistent();
 /**
  * @title TwoPhaseCommit 合约
  * @author Yu ZHANG
- * @dev 跨链场景方法
- * 1. set: 业务 - 设置数据
- * 2. get: 业务 - 获取数据
- * 3. commit: 两阶段 - 提交
- * 4. rollback: 两阶段 - 回滚
+ * @dev 两阶段提交方法
+ * 1. set: 两阶段 - 预提交
+ * 2. commit: 两阶段 - 正式提交
+ * 3. rollback: 两阶段 - 回滚
+ * 4. get: 获取数据
  * @dev 辅助方法
  * 1. isValidKey: 检查key是否合法
  * 2. isValidValue: 检查value是否合法
@@ -47,7 +47,7 @@ contract TwoPhaseCommit {
     event rollbackEvent(string indexed key, string indexed value);
 
     /**
-     * @notice 设置数据
+     * @notice 两阶段 - 预提交
      * @param _key 数据 - 键
      * @param _value 数据 - 值
      */
@@ -71,7 +71,7 @@ contract TwoPhaseCommit {
     }
 
     /**
-     * @notice 两阶段 - 提交
+     * @notice 两阶段 - 正式提交
      * @param _key 数据 - 键
      * @param _value 数据 - 值
      */
