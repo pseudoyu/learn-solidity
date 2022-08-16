@@ -12,6 +12,7 @@ contract BasicNft is ERC721URIStorage {
 
     // Events
     event NftMinted(uint256 indexed tokenId, string indexed tokenUri, address indexed minter);
+    event NftBurnt(uint256 indexed tokenId, address indexed minter);
 
     constructor() ERC721("DemoNft", "DNFT") {
         s_tokenCounter = 0;
@@ -23,6 +24,13 @@ contract BasicNft is ERC721URIStorage {
         _setTokenURI(newTokenId, TOKEN_URI);
         emit NftMinted(newTokenId, TOKEN_URI, msg.sender);
         s_tokenCounter = s_tokenCounter + 1;
+        return s_tokenCounter; 
+    } 
+
+    function burnNft(uint256 _tokenId) public returns (uint256) {
+        _burn(_tokenId);
+        emit NftBurnt(_tokenId, msg.sender);
+        s_tokenCounter = s_tokenCounter - 1;
         return s_tokenCounter; 
     } 
 
